@@ -1,20 +1,19 @@
-from src.power import power_function
-from src.constants import SAMPLE_CONSTANT
+import sys
+from tokenizer import get_tokens
+from constants import SAMPLE_CONSTANT
 
 
 def main() -> None:
     """
-    Обязательнная составляющая программ, которые сдаются. Является точкой входа в приложение
+    Функция считывает строку из консоли.
+    Если строка является корректным арифметическим выражением, в консоль возвращается его решение
+    Если в выражении допущена ошибка, возвращается пояснение почему выражение не обработано
     :return: Данная функция ничего не возвращает
     """
 
-    target, degree = map(int, input("Введите два числа разделенные пробелом: ").split(" "))
-
-    result = power_function(target=target, power=degree)
-
-    print(result)
-
-    print(SAMPLE_CONSTANT)
+    for line in sys.stdin:
+        tokens = get_tokens(line.strip())
+        print(tokens)
 
 if __name__ == "__main__":
     main()
