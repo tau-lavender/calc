@@ -1,7 +1,7 @@
 from string import digits
 from itertools import product
-from src.constants import *
-from src.token import *
+from src.constants import OPERATIONS
+from src.token import NumberToken
 
 
 class InputException(Exception):
