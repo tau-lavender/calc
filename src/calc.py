@@ -2,8 +2,8 @@ from typing import Any
 from src.token import OperationTypes
 from src.tokenizer import InputException
 
-def calc_rpn(rpn: list[Any]) -> int | float:
 
+def calc_rpn(rpn: list[Any]) -> int | float:
     stack: list[int | float] = []
 
     for token in rpn:

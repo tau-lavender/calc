@@ -10,9 +10,10 @@ class InputException(Exception):
     pass
 
 
-def get_tokens(expr: str) -> list:
+def get_tokens(expr: str) -> list[Any]:
     """
-    Токенизация выражения в строке
+    Токенизация выражения в строке.
+
     :expr: Строка пользовательского ввода с выражением которое нужно обработать
     :return: Список токенов
     """
@@ -25,46 +26,50 @@ def get_tokens(expr: str) -> list:
     i = 0
 
     if "," in expr:
-        raise InputException("Для записи рациональных чисел нужно использовать точку: '.'")
+        raise InputException(
+            "Для записи рациональных чисел нужно использовать точку: '.'"
+        )
     expr = expr.strip()
     while "  " in expr:
         expr = expr.replace("  ", " ")
-    incorrect_combos = [" ".join(el) for el in product(digits + ".", repeat = 2)]
+    incorrect_combos = [" ".join(el) for el in product(digits + ".", repeat=2)]
     for combo in incorrect_combos:
         if combo in expr:
             raise InputException("Лишний пробел между числами")
 
-    expr = expr.replace(" ", "") + " " # буферный пробел для избегания ошибок индексов
+    expr = expr.replace(" ", "") + " "  # буферный пробел для избегания ошибок индексов
 
     while i < len(expr):
         curent_symbol = expr[i]
 
-        if curent_symbol.isdigit() or curent_symbol == '.':
+        if curent_symbol.isdigit() or curent_symbol == ".":
             curent_number = curent_symbol
 
-            while expr[i + 1].isdigit() or expr[i + 1] == '.':
+            while expr[i + 1].isdigit() or expr[i + 1] == ".":
                 i += 1
                 curent_number += expr[i]
 
             if curent_number[0] == "0" and len(curent_number) >= 2:
                 if curent_number[:2] != "0.":
-                    raise InputException(f"В числе ({curent_number}) присутствуют ведущие нули")
+                    raise InputException(
+                        f"В числе ({curent_number}) присутствуют ведущие нули"
+                    )
 
             if curent_number.count(".") > 1:
                 raise InputException(f"В числе ({curent_number}) несколько точек")
             elif curent_number.count(".") == 1:
                 if len(curent_number) != 1:
-                    tokens.append(NumberToken(value = float(curent_number)))
+                    tokens.append(NumberToken(value=float(curent_number)))
                 else:
                     raise InputException("Точка не является числом")
             else:
-                tokens.append(NumberToken(value = int(curent_number)))
+                tokens.append(NumberToken(value=int(curent_number)))
             curent_number = ""
             i += 1
             continue
 
-        if expr[i: i + 2] in OPERATIONS.keys():
-            tokens.append(OPERATIONS[expr[i:i + 2]]())
+        if expr[i : i + 2] in OPERATIONS.keys():
+            tokens.append(OPERATIONS[expr[i : i + 2]]())
             i += 2
             continue
 
@@ -104,27 +109,27 @@ def get_tokens(expr: str) -> list:
         if curent_symbol == " ":
             break
 
-
         raise InputException("Выражение содержит лишние символы")
 
     return tokens
 
 
-def check_tokens(tokens: list):
+def check_tokens(tokens: list[Any]) -> None:
     """
-    Проверка токенов вместе
+    Проверка токенов вместе.
+
     :tokens: Список токенов
     :return: ничего не возвращает и не меняет аргументы
     """
 
     if tokens[-1].is_operation():
-            raise InputException("Оператор не может быть последним токеном")
+        raise InputException("Оператор не может быть последним токеном")
 
     i = 0
     bracket_counter = 0
 
     while i < len(tokens):
-        if i == 0 :
+        if i == 0:
             if tokens[i].is_operation():
                 if tokens[i].operation_type != OperationTypes.UNARY_MINUS:
                     raise InputException("Выражение не может начинаться с оператора")
@@ -133,12 +138,15 @@ def check_tokens(tokens: list):
                 raise InputException("Два оператора не могут идти подряд")
 
             if tokens[i - 1].is_bracket() and tokens[i].is_operation():
-                if tokens[i - 1].is_open():
-                    raise InputException("Нет оператора между скобкой и оператором")
+                if (
+                    tokens[i - 1].is_open()
+                    and tokens[i].operation_type != OperationTypes.UNARY_MINUS
+                ):
+                    raise InputException("Нет числа между скобкой и оператором")
 
             if tokens[i].is_bracket() and tokens[i - 1].is_operation():
                 if tokens[i].is_close():
-                    raise InputException("Нет оператора между скобкой и оператором")
+                    raise InputException("Нет числа между скобкой и оператором")
 
             if tokens[i - 1].is_bracket() and tokens[i].is_number():
                 if tokens[i - 1].bracket_type == BracketTypes.CLOSE:
@@ -157,10 +165,14 @@ def check_tokens(tokens: list):
         if tokens[i].is_bracket():
             bracket_counter += tokens[i].bracket_type
             if bracket_counter < 0:
-                raise InputException("В выражении присутстуют закрывающие скобки без открывающих")
+                raise InputException(
+                    "В выражении присутстуют закрывающие скобки без открывающих"
+                )
         i += 1
 
     if bracket_counter > 0:
         raise InputException("В выражении присутстуют незакрытые открывающие скобки")
     if bracket_counter < 0:
-        raise InputException("В выражении присутстуют закрывающие скобки без открывающих")
+        raise InputException(
+            "В выражении присутстуют закрывающие скобки без открывающих"
+        )

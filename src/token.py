@@ -13,6 +13,7 @@ class BracketTypes(IntEnum):
 
 
 class OperationTypes(Enum):
+    EMPTY = auto()
     UNARY_MINUS = auto()
     ADDITION = auto()
     SUBSTRACTION = auto()
@@ -35,151 +36,133 @@ class AssociativityType(Enum):
     RIGHT = auto()
 
 
-class Token():
-    def __init__(self, type: TokenTypes):
+class Token:
+    def __init__(self, type: TokenTypes) -> None:
         self.type = type
-        self.operation_type = None
+        self.operation_type = OperationTypes.EMPTY
 
-
-    def is_number(self):
+    def is_number(self) -> bool:
         return self.type == TokenTypes.NUMBER
 
-
-    def is_operation(self):
+    def is_operation(self) -> bool:
         return self.type == TokenTypes.OPERATION
 
-
-    def is_bracket(self):
+    def is_bracket(self) -> bool:
         return self.type == TokenTypes.BRACKET
 
+    def __str__(self) -> str:
+        return str(self.operation_type.name)
 
-    def __str__(self):
-        return str(self.operation_type)
-
-
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 
 class OperationToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_priority = OperationPriority.FIRST
         self.associativity_type = AssociativityType.LEFT
 
 
 class NumberToken(Token):
-    def __init__(self, value: float):
-        super().__init__(type = TokenTypes.NUMBER)
+    def __init__(self, value: float) -> None:
+        super().__init__(type=TokenTypes.NUMBER)
         self.value = value
 
-
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.value)
 
 
 class BracketToken(Token):
-    def __init__(self, bracket_type: BracketTypes):
-        super().__init__(type = TokenTypes.BRACKET)
+    def __init__(self, bracket_type: BracketTypes) -> None:
+        super().__init__(type=TokenTypes.BRACKET)
         self.bracket_type = bracket_type
 
+    def __str__(self) -> str:
+        return str(self.type.name) + " " + str(self.bracket_type.name)
 
-    def __str__(self):
-        return str(self.bracket_type)
-
-
-    def is_open(self):
+    def is_open(self) -> bool:
         return self.bracket_type == BracketTypes.OPEN
 
-
-    def is_close(self):
+    def is_close(self) -> bool:
         return self.bracket_type == BracketTypes.CLOSE
 
 
 class UnaryMinusToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.UNARY_MINUS
         self.operation_priority = OperationPriority.FIRST
 
-
-    def calculate_operation(self, x: NumberToken):
+    def calculate_operation(self, x: NumberToken) -> NumberToken:
         return NumberToken(-x.value)
 
 
 class AdditionToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.ADDITION
         self.operation_priority = OperationPriority.FOURTH
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value + y.value)
 
 
 class SubstractionToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.SUBSTRACTION
         self.operation_priority = OperationPriority.FOURTH
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value - y.value)
 
 
 class MultiplicationToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.MULTIPLICATION
         self.operation_priority = OperationPriority.THIRD
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value * y.value)
 
 
 class DivisionToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.DIVISION
         self.operation_priority = OperationPriority.THIRD
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value / y.value)
 
 
 class DivisionWithoutModToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.DIVISION_WITHOUT_MOD
         self.operation_priority = OperationPriority.THIRD
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value // y.value)
 
 
-
 class ModToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.MOD_
         self.operation_priority = OperationPriority.THIRD
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value % y.value)
 
 
 class PowerToken(Token):
-    def __init__(self):
-        super().__init__(type = TokenTypes.OPERATION)
+    def __init__(self) -> None:
+        super().__init__(type=TokenTypes.OPERATION)
         self.operation_type = OperationTypes.POWER
         self.operation_priority = OperationPriority.SECOND
 
-
-    def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return NumberToken(x.value ** y.value)
+    def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
+        return NumberToken(x.value**y.value)
