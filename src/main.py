@@ -1,6 +1,7 @@
 import sys
 from src.tokenizer import get_tokens, check_tokens
 from src.shunting_yard import get_rpn
+from src.calc import calc_rpn
 
 
 def main() -> None:
@@ -17,6 +18,8 @@ def main() -> None:
         check_tokens(tokens)
         rpn = get_rpn(tokens)
         print(rpn)
+        answer = calc_rpn(rpn)
+        print(answer)
 
 if __name__ == "__main__":
     main()

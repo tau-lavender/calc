@@ -30,6 +30,11 @@ class OperationPriority(IntEnum):
     FOURTH = 4
 
 
+class AssociativityType(Enum):
+    LEFT = auto()
+    RIGHT = auto()
+
+
 class Token():
     def __init__(self, type: TokenTypes):
         self.type = type
@@ -54,6 +59,13 @@ class Token():
 
     def __repr__(self):
         return self.__str__()
+
+
+class OperationToken(Token):
+    def __init__(self):
+        super().__init__(type = TokenTypes.OPERATION)
+        self.operation_priority = OperationPriority.FIRST
+        self.associativity_type = AssociativityType.LEFT
 
 
 class NumberToken(Token):
@@ -92,7 +104,7 @@ class UnaryMinusToken(Token):
 
 
     def calculate_operation(self, x: NumberToken):
-        return -x.value
+        return NumberToken(-x.value)
 
 
 class AdditionToken(Token):
@@ -103,7 +115,7 @@ class AdditionToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value + y.value
+        return NumberToken(x.value + y.value)
 
 
 class SubstractionToken(Token):
@@ -114,7 +126,7 @@ class SubstractionToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value - y.value
+        return NumberToken(x.value - y.value)
 
 
 class MultiplicationToken(Token):
@@ -125,7 +137,7 @@ class MultiplicationToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value * y.value
+        return NumberToken(x.value * y.value)
 
 
 class DivisionToken(Token):
@@ -136,7 +148,7 @@ class DivisionToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value / y.value
+        return NumberToken(x.value / y.value)
 
 
 class DivisionWithoutModToken(Token):
@@ -147,7 +159,7 @@ class DivisionWithoutModToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value // y.value
+        return NumberToken(x.value // y.value)
 
 
 
@@ -159,7 +171,7 @@ class ModToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value % y.value
+        return NumberToken(x.value % y.value)
 
 
 class PowerToken(Token):
@@ -170,4 +182,4 @@ class PowerToken(Token):
 
 
     def calculate_operation(self, x: NumberToken, y: NumberToken):
-        return x.value ** y.value
+        return NumberToken(x.value ** y.value)

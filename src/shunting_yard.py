@@ -9,7 +9,7 @@ def get_rpn(tokens: list) -> list:
             res.append(tok)
 
         if tok.is_operation():
-            while op_stack and op_stack[-1].is_operation() and (op_stack[-1].operation_priority >= tok.operation_priority):
+            while op_stack and op_stack[-1].is_operation() and (op_stack[-1].operation_priority <= tok.operation_priority):
                  res.append(op_stack.pop())
             op_stack.append(tok)
 
