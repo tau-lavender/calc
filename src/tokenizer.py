@@ -83,8 +83,8 @@ def get_tokens(expr: str) -> list[Any]:
                     i += 1
                     continue
             else:
-                if tokens[i - 1].is_bracket():
-                    if tokens[i - 1].is_open():
+                if tokens[-1].is_bracket():
+                    if tokens[-1].is_open():
                         if curent_symbol == "+":
                             i += 1
                             continue
