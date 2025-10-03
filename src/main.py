@@ -1,6 +1,6 @@
 import sys
-from tokenizer import get_tokens
-from constants import SAMPLE_CONSTANT
+from src.tokenizer import get_tokens, check_tokens
+from src.shunting_yard import get_rpn
 
 
 def main() -> None:
@@ -14,7 +14,9 @@ def main() -> None:
     for line in sys.stdin:
         tokens = get_tokens(line.strip())
         print(tokens)
+        check_tokens(tokens)
+        rpn = get_rpn(tokens)
+        print(rpn)
 
 if __name__ == "__main__":
     main()
-
