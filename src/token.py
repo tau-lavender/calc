@@ -31,7 +31,7 @@ class OperationPriority(IntEnum):
     FOURTH = 4
 
 
-class AssociativityType(Enum):
+class AssociativityTypes(Enum):
     LEFT = auto()
     RIGHT = auto()
 
@@ -60,8 +60,8 @@ class Token:
 class OperationToken(Token):
     def __init__(self) -> None:
         super().__init__(type=TokenTypes.OPERATION)
-        self.operation_priority = OperationPriority.FIRST
-        self.associativity_type = AssociativityType.LEFT
+        self.operation_priority = OperationPriority.FOURTH
+        self.associativity_type = AssociativityTypes.LEFT
 
 
 class NumberToken(Token):
@@ -88,39 +88,38 @@ class BracketToken(Token):
         return self.bracket_type == BracketTypes.CLOSE
 
 
-class UnaryMinusToken(Token):
+class UnaryMinusToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.UNARY_MINUS
         self.operation_priority = OperationPriority.FIRST
+        self.associativity_type = AssociativityTypes.RIGHT
 
     def calculate_operation(self, x: NumberToken) -> NumberToken:
         return NumberToken(-x.value)
 
 
-class AdditionToken(Token):
+class AdditionToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.ADDITION
-        self.operation_priority = OperationPriority.FOURTH
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value + y.value)
 
 
-class SubstractionToken(Token):
+class SubstractionToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.SUBSTRACTION
-        self.operation_priority = OperationPriority.FOURTH
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value - y.value)
 
 
-class MultiplicationToken(Token):
+class MultiplicationToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.MULTIPLICATION
         self.operation_priority = OperationPriority.THIRD
 
@@ -128,9 +127,9 @@ class MultiplicationToken(Token):
         return NumberToken(x.value * y.value)
 
 
-class DivisionToken(Token):
+class DivisionToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.DIVISION
         self.operation_priority = OperationPriority.THIRD
 
@@ -138,9 +137,9 @@ class DivisionToken(Token):
         return NumberToken(x.value / y.value)
 
 
-class DivisionWithoutModToken(Token):
+class DivisionWithoutModToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.DIVISION_WITHOUT_MOD
         self.operation_priority = OperationPriority.THIRD
 
@@ -148,9 +147,9 @@ class DivisionWithoutModToken(Token):
         return NumberToken(x.value // y.value)
 
 
-class ModToken(Token):
+class ModToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.MOD_
         self.operation_priority = OperationPriority.THIRD
 
@@ -158,11 +157,12 @@ class ModToken(Token):
         return NumberToken(x.value % y.value)
 
 
-class PowerToken(Token):
+class PowerToken(OperationToken):
     def __init__(self) -> None:
-        super().__init__(type=TokenTypes.OPERATION)
+        super().__init__()
         self.operation_type = OperationTypes.POWER
         self.operation_priority = OperationPriority.SECOND
+        self.associativity_type = AssociativityTypes.RIGHT
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
         return NumberToken(x.value**y.value)

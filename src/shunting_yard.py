@@ -1,4 +1,5 @@
 from typing import Any
+from src.token import AssociativityTypes
 
 
 def get_rpn(tokens: list[Any]) -> list[Any]:
@@ -12,7 +13,12 @@ def get_rpn(tokens: list[Any]) -> list[Any]:
             while (
                 op_stack
                 and op_stack[-1].is_operation()
-                and (op_stack[-1].operation_priority <= tok.operation_priority)
+                and (
+                    tok.associativity_type == AssociativityTypes.RIGHT
+                    and (op_stack[-1].operation_priority < tok.operation_priority)
+                    or tok.associativity_type == AssociativityTypes.LEFT
+                    and (op_stack[-1].operation_priority <= tok.operation_priority)
+                )
             ):
                 res.append(op_stack.pop())
             op_stack.append(tok)
