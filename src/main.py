@@ -1,26 +1,36 @@
 import sys
-from src.tokenizer import get_tokens, check_tokens
-from src.shunting_yard import get_rpn
-from src.calc import calc_rpn
+from src.constants import HELP_MSG
+from src.calc import calc_infix
+from src.token import CalculationException
+from src.tokenizer import InputException
 
 
 def main() -> None:
     """
     Функция считывает строку из консоли.
 
+    Если строка является командой "help" выводится краткая документация
+    Если строка является командой "exit" программа завершает работу
     Если строка является корректным арифметическим выражением, в консоль возвращается его решение
     Если в выражении допущена ошибка, возвращается пояснение почему выражение не обработано
     :return: Данная функция ничего не возвращает
     """
 
+    print(HELP_MSG)
+
     for line in sys.stdin:
-        tokens = get_tokens(line.strip())
-        print(tokens)
-        check_tokens(tokens)
-        rpn = get_rpn(tokens)
-        print(rpn)
-        answer = calc_rpn(rpn)
-        print(answer)
+        if line.strip() == "exit":
+            exit(0)
+        if line.strip() == "help":
+            print(HELP_MSG)
+            continue
+
+        try:
+            print(calc_infix(line))
+        except InputException as e:
+            print("Error:", str(e))
+        except CalculationException as e:
+            print("Error:", str(e))
 
 
 if __name__ == "__main__":

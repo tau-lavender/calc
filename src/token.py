@@ -1,6 +1,10 @@
 from enum import Enum, IntEnum, auto
 
 
+class CalculationException(Exception):
+    pass
+
+
 class TokenTypes(Enum):
     NUMBER = auto()
     OPERATION = auto()
@@ -134,6 +138,8 @@ class DivisionToken(OperationToken):
         self.operation_priority = OperationPriority.THIRD
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
+        if y.value == 0:
+            raise CalculationException("Деление на ноль")
         return NumberToken(x.value / y.value)
 
 
@@ -144,6 +150,10 @@ class DivisionWithoutModToken(OperationToken):
         self.operation_priority = OperationPriority.THIRD
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
+        if y.value == 0:
+            raise CalculationException("Деление на ноль")
+        elif type(x.value) is float or type(y.value) is float:
+            raise CalculationException("Операция '//' поддерживает только целые числа")
         return NumberToken(x.value // y.value)
 
 
@@ -154,6 +164,10 @@ class ModToken(OperationToken):
         self.operation_priority = OperationPriority.THIRD
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
+        if y.value == 0:
+            raise CalculationException("Деление на ноль")
+        elif type(x.value) is float or type(y.value) is float:
+            raise CalculationException("Операция '%' поддерживает только целые числа")
         return NumberToken(x.value % y.value)
 
 
@@ -165,4 +179,8 @@ class PowerToken(OperationToken):
         self.associativity_type = AssociativityTypes.RIGHT
 
     def calculate_operation(self, x: NumberToken, y: NumberToken) -> NumberToken:
+        if x.value == 0 and y.value < 0:
+            raise CalculationException("Нелья возводить 0 в отрицательную степень")
+        elif x.value < 0 and type(y.value) is float:
+            raise CalculationException("Нелья брать корень от отрицательного числа")
         return NumberToken(x.value**y.value)

@@ -1,6 +1,8 @@
 from typing import Any
 from src.token import OperationTypes
 from src.tokenizer import InputException
+from src.tokenizer import get_tokens, check_tokens
+from src.shunting_yard import get_rpn
 
 
 def calc_rpn(rpn: list[Any]) -> int | float:
@@ -24,3 +26,11 @@ def calc_rpn(rpn: list[Any]) -> int | float:
         raise InputException("Выражение не корректно")
 
     return final_result
+
+
+def calc_infix(line: str) -> int | float:
+    tokens = get_tokens(line.strip())
+    check_tokens(tokens)
+    rpn = get_rpn(tokens)
+    answer = calc_rpn(rpn)
+    return answer
