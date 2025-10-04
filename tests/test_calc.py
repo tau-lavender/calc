@@ -7,7 +7,6 @@ from src.calc import calc_infix
 class TestCalcIndex:
     """
     Проверяет вычисление инфиксной нотации
-    :return: ничего не возвращает
     """
 
     def test_simple_use(self) -> None:

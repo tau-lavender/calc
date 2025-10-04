@@ -7,7 +7,6 @@ from src.tokenizer import get_tokens, check_tokens
 class TestGetTokens:
     """
     Проверяет преобразование в токены
-    :return: ничего не возвращает
     """
 
     def test_simple_cases(self) -> None:
@@ -40,6 +39,10 @@ class TestGetTokens:
 
 
 class TestCheckTokens:
+    """
+    Проверяет проверку токенов
+    """
+
     def test_toens_errors(self) -> None:
         with pytest.raises(InputException):
             check_tokens(get_tokens("2 + 2 +"))

@@ -3,6 +3,13 @@ from src.token import AssociativityTypes
 
 
 def get_rpn(tokens: list[Any]) -> list[Any]:
+    """
+    Переводит переводит лист токенов в инфиксной записи в лист токенов в обратной польской нотации
+
+    :tokens: Лист токенов в инфиксной нотации
+    :return: Лист токенов в обратной польской нотации
+    """
+
     res: list[Any] = []
     op_stack: list[Any] = []
     for tok in tokens:

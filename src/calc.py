@@ -6,6 +6,13 @@ from src.shunting_yard import get_rpn
 
 
 def calc_rpn(rpn: list[Any]) -> NumberToken:
+    """
+    Вычисляет выражение в польской нотации
+
+    :rpn: Лист токенов записанных в польской нотации
+    :return: Токен номера с решением выражения
+    """
+
     stack: list[NumberToken] = []
 
     for token in rpn:
@@ -29,6 +36,13 @@ def calc_rpn(rpn: list[Any]) -> NumberToken:
 
 
 def calc_infix(line: str) -> int | float:
+    """
+    Запускает функции токенизации, проверки токенов, шунтирующего двора и вычисления польской нотации
+
+    :line: Строка с пользовательским вводом
+    :return: Решение инфиксного выражения
+    """
+
     tokens = get_tokens(line.strip())
     check_tokens(tokens)
     rpn = get_rpn(tokens)
