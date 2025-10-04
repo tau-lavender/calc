@@ -69,7 +69,7 @@ class OperationToken(Token):
 
 
 class NumberToken(Token):
-    def __init__(self, value: float) -> None:
+    def __init__(self, value: int | float) -> None:
         super().__init__(type=TokenTypes.NUMBER)
         self.value = value
 

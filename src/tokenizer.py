@@ -18,9 +18,6 @@ def get_tokens(expr: str) -> list[Any]:
     :return: Список токенов
     """
 
-    if len(expr) == 0:
-        raise InputException("Пустое выражение")
-
     tokens: list[Any] = []
     curent_number = ""
     i = 0
@@ -38,7 +35,8 @@ def get_tokens(expr: str) -> list[Any]:
             raise InputException("Лишний пробел между числами")
 
     expr = expr.replace(" ", "") + " "  # буферный пробел для избегания ошибок индексов
-
+    if expr == " ":
+        raise InputException("Пустое выражение")
     while i < len(expr):
         curent_symbol = expr[i]
 
@@ -51,12 +49,10 @@ def get_tokens(expr: str) -> list[Any]:
 
             if curent_number[0] == "0" and len(curent_number) >= 2:
                 if curent_number[:2] != "0.":
-                    raise InputException(
-                        f"В числе ({curent_number}) присутствуют ведущие нули"
-                    )
+                    raise InputException("В числе присутствуют ведущие нули")
 
             if curent_number.count(".") > 1:
-                raise InputException(f"В числе ({curent_number}) несколько точек")
+                raise InputException("В числе несколько точек")
             elif curent_number.count(".") == 1:
                 if len(curent_number) != 1:
                     tokens.append(NumberToken(value=float(curent_number)))
